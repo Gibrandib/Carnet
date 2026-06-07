@@ -1,0 +1,1051 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carnet du Cueilleur — Suisse Romande</title>
+  <link rel="stylesheet" href="leaflet.css"/>
+  <link rel="stylesheet" href="nouislider.min.css"/>
+  <script src="leaflet.js"></script>
+  <script src="nouislider.min.js"></script>
+  <script src="geotiff.js"></script>
+  <style>
+    /* ── Variables globales ── */
+    :root {
+      --vf:#2d5a1b; --vm:#4a8a2a; --vc:#7ab840;
+      --fond:#f5f5f0; --blanc:#fff; --texte:#222; --gris:#666;
+      --orange:#e07820; --rouge:#c03020; --r:12px;
+      --ow:58px;   /* largeur barre onglets */
+      --ph:52vh;   /* hauteur panneau */
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;font-family:Arial,sans-serif;font-size:15px;color:var(--texte);overflow:hidden}
+
+    /* ── Carte plein écran ── */
+    #carte{position:fixed;top:0;left:0;right:var(--ow);bottom:0;z-index:1}
+
+    /* ── Barre d'onglets verticale (droite) ── */
+    .onglets{position:fixed;top:0;right:0;bottom:0;width:var(--ow);background:var(--vf);
+      z-index:500;display:flex;flex-direction:column;align-items:center;
+      padding-top:16px;gap:6px;box-shadow:-2px 0 8px rgba(0,0,0,.3)}
+    .onglet{width:50px;padding:10px 4px 8px;background:none;border:none;
+      color:rgba(255,255,255,.5);font-size:9px;text-align:center;
+      cursor:pointer;border-radius:8px;line-height:1.2}
+    .onglet .ic{font-size:22px;display:block;margin-bottom:3px}
+    .onglet.actif{color:#fff;background:rgba(255,255,255,.18)}
+
+    /* ── Bulle info (clic sur carte) ── */
+    #bulle{position:fixed;left:12px;top:12px;background:rgba(255,255,255,.96);
+      border-radius:var(--r);padding:10px 13px;box-shadow:0 2px 12px rgba(0,0,0,.18);
+      z-index:300;min-width:180px;max-width:240px;display:none;backdrop-filter:blur(4px)}
+    .b-alt{font-size:18px;font-weight:bold;color:var(--vf)}
+    .b-mix{font-size:18px;color:var(--orange);font-weight:bold;margin-top:3px}
+    .b-type{font-size:11px;color:var(--gris);margin-bottom:3px;line-height:1.3}
+    .b-actions{display:flex;gap:6px;flex-wrap:wrap}
+    .bb{padding:5px 10px;border:none;border-radius:8px;font-size:12px;font-weight:bold;cursor:pointer}
+    .bb-v,.bb-g,.bb-o{background:#eee;color:var(--texte)}
+    #b-close{position:absolute;top:6px;right:8px;background:none;border:none;font-size:16px;color:#aaa;cursor:pointer}
+
+    /* ── Modale enregistrement ── */
+    #mfond{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:2000;display:none;align-items:flex-end;justify-content:center}
+    #mfond.v{display:flex}
+    #modale{background:#fff;border-radius:16px 16px 0 0;padding:20px 18px 30px;width:100%;max-width:480px;animation:up .25s ease}
+    @keyframes up{from{transform:translateY(100%)}to{transform:translateY(0)}}
+    .mt{font-size:17px;font-weight:bold;color:var(--vf);margin-bottom:14px}
+    .ch{margin-bottom:11px}
+    .ch label{display:block;font-size:12px;color:var(--gris);margin-bottom:3px;font-weight:bold}
+    .ch input{width:100%;padding:10px;border:1.5px solid #ddd;border-radius:8px;font-size:14px}
+    .ch input:focus{outline:none;border-color:var(--vm)}
+
+    /* ── Panneau bas (rabattable) ── */
+    .pan{position:fixed;left:0;right:var(--ow);bottom:0;height:var(--ph);
+      background:var(--fond);border-radius:16px 16px 0 0;
+      box-shadow:0 -4px 20px rgba(0,0,0,.2);z-index:400;
+      transform:translateY(calc(100% - 40px));transition:transform .3s ease;display:flex;flex-direction:column}
+    .pan.ouvert{transform:translateY(0)}
+    .poignee{flex-shrink:0;height:40px;display:flex;align-items:center;
+      justify-content:center;gap:10px;cursor:pointer;border-radius:16px 16px 0 0}
+    .pb{width:32px;height:4px;background:#ccc;border-radius:2px}
+    .pl{font-size:11px;color:var(--gris);font-weight:bold;letter-spacing:.05em}
+    .corps{flex:1;overflow-y:auto;padding:0 14px 20px}
+
+    /* ── Sections ── */
+    .sec{display:none} .sec.active{display:block}
+    h2{font-size:15px;color:var(--vf);margin:10px 0 8px;padding-bottom:5px;border-bottom:2px solid var(--vc)}
+
+    /* ── Blocs blancs ── */
+    .bloc{background:#fff;border-radius:var(--r);padding:11px 12px;margin-bottom:9px;box-shadow:0 1px 3px rgba(0,0,0,.07)}
+    .lp{font-size:11px;color:var(--gris);text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
+
+    /* ── Boutons ── */
+    .btn{display:block;width:100%;padding:11px;border:none;border-radius:var(--r);
+      font-size:14px;font-weight:bold;cursor:pointer;text-align:center;margin-bottom:8px}
+    .bv{background:var(--vm);color:#fff} .bg{background:#ddd;color:var(--texte)}
+    .bo{background:var(--orange);color:#fff} .br{background:var(--rouge);color:#fff}
+    .bp{display:inline-block;width:auto;padding:5px 10px;font-size:12px;margin:0}
+
+    /* ── Cartes spots (liste carnet) ── */
+    .sc{background:#fff;border-radius:var(--r);padding:10px 12px;margin-bottom:8px;
+      box-shadow:0 1px 3px rgba(0,0,0,.07);border-left:4px solid var(--vc)}
+    .sm{font-size:12px;color:var(--gris);margin-bottom:4px}
+    .sa{display:flex;gap:4px;flex-wrap:wrap}
+
+    /* ── Stats carnet ── */
+    .sg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:9px}
+    .sb{text-align:center;padding:11px;background:#fff;border-radius:var(--r)}
+    .sn2{font-size:38px;font-weight:bold;color:var(--vm);line-height:1}
+    .sd{font-size:12px;color:var(--gris);margin-top:2px}
+
+    /* ── Sliders noUiSlider ── */
+    .noUi-target{background:#e0e0e0;border:none;box-shadow:none;height:6px;border-radius:3px;margin:16px 8px 22px}
+    .noUi-connect{background:var(--vm)}
+    .noUi-handle{width:22px!important;height:22px!important;top:-8px!important;right:-11px!important;
+      border-radius:50%!important;background:var(--vm)!important;border:2px solid #fff!important;
+      box-shadow:0 1px 4px rgba(0,0,0,.2)!important;cursor:pointer}
+    .noUi-handle::before,.noUi-handle::after{display:none!important}
+    .noUi-tooltip{background:var(--vf);color:#fff;border:none;font-size:11px;padding:2px 6px;border-radius:4px}
+
+    /* ── Chips (filtres) ── */
+    .chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+    .chip{padding:4px 10px;border-radius:20px;font-size:12px;cursor:pointer;
+      border:1.5px solid #ccc;background:#fff;color:var(--gris)}
+    .chip.actif{background:var(--vm);color:#fff;border-color:var(--vm)}
+
+    /* ── Divers ── */
+    .aide{background:#e8f4e8;border-left:4px solid var(--vc);padding:8px 10px;
+      border-radius:0 8px 8px 0;font-size:12px;color:var(--vf);margin-bottom:9px}
+    .vide{text-align:center;padding:18px;color:var(--gris);font-size:13px}
+    .vide .gi{font-size:38px;display:block;margin-bottom:5px}
+    .zt{width:100%;min-height:75px;padding:8px;border:1.5px solid #ccc;border-radius:8px;
+      font-size:11px;font-family:monospace;background:#f9f9f9;margin-bottom:8px;resize:vertical}
+    #load{position:fixed;top:0;left:0;right:0;background:var(--vf);color:#fff;
+      text-align:center;padding:10px;font-size:13px;z-index:3000}
+  
+  #toast-deplacement{
+    position:fixed;top:18px;left:50%;transform:translateX(-50%);
+    background:rgba(20,20,20,0.88);color:#fff;
+    padding:14px 28px;border-radius:28px;font-size:17px;font-weight:600;
+    pointer-events:none;opacity:0;transition:opacity 0.5s;
+    z-index:9999;white-space:nowrap;letter-spacing:0.01em;
+    box-shadow:0 4px 18px rgba(0,0,0,0.35);
+  }
+  #toast-deplacement.visible{opacity:1;}
+</style>
+</head>
+<body>
+
+<div id="toast-deplacement">🗺 Déplacez-vous pour charger le reste de la carte</div>
+  <div id="load">⏳ Chargement des données…</div>
+<div id="carte"></div>
+
+<!-- ══ Bulle info (apparaît au clic sur la carte) ══ -->
+<div id="bulle">
+  <button id="b-close" onclick="fermerBulle()">✕</button>
+  <div class="b-alt" id="b-alt">—</div>
+  <div class="b-mix" id="b-mix"></div>
+  <div style="font-size:10px;color:var(--gris);margin-bottom:3px" id="b-coniferes"></div>
+  <div class="b-type" id="b-type"></div>
+  <div style="font-size:10px;color:var(--gris);margin:8px 0">📍 <span id="b-coords">—</span></div>
+  <div class="b-actions">
+    <button class="bb bb-v" onclick="ouvrirModale()">+ Enregistrer</button>
+    <a id="b-maps" href="#" target="_blank" class="bb bb-g">🗺 Maps</a>
+    <button class="bb bb-o" id="btn-gps" onclick="meLocaliser(this)">📡 GPS</button>
+  </div>
+</div>
+
+<!-- ══ Modale enregistrement d'un spot ══ -->
+<div id="mfond" onclick="fermerModale(event)">
+  <div id="modale">
+    <div class="mt">🍄 Nouveau spot</div>
+    <div class="ch"><label>Espèce *</label><input type="text" id="f-esp" placeholder="Chanterelle, Cèpe, Ail des ours…"></div>
+    <div class="ch"><label>Date *</label><input type="date" id="f-dat"></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn bv" style="flex:2;margin:0" onclick="enregistrerSpot()">✓ Enregistrer</button>
+      <button class="btn bg" style="flex:1;margin:0" onclick="fermerModale()">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ Onglets verticaux ══ -->
+<div class="onglets">
+  <button class="onglet actif" onclick="nav('carnet',this)"><span class="ic">📓</span>Carnet</button>
+  <button class="onglet" onclick="nav('animer',this)"><span class="ic">📅</span>Filtrer</button>
+  <button class="onglet" onclick="nav('recherche',this)"><span class="ic">🔍</span>Recherche</button>
+  <button class="onglet" onclick="nav('data',this)"><span class="ic">💾</span>Données</button>
+</div>
+
+<!-- ══ Panneau bas ══ -->
+<div class="pan" id="pan">
+  <div class="poignee" onclick="togglePan()">
+    <div class="pb"></div>
+    <span class="pl" id="pan-label">CARNET</span>
+  </div>
+  <div class="corps">
+
+    <!-- ── CARNET ── -->
+    <div id="sec-carnet" class="sec active">
+      <h2>📓 Mon carnet</h2>
+      <div class="sg">
+        <div class="sb"><div class="sn2" id="st-spots">0</div><div class="sd">spots</div></div>
+        <div class="sb"><div class="sn2" id="st-esp">0</div><div class="sd">espèces</div></div>
+      </div>
+      <div id="liste-spots"><div class="vide"><span class="gi">🍄</span>Carnet vide — touchez la carte !</div></div>
+      <div style="margin-top:14px;padding-top:12px;border-top:2px dashed #ddd">
+        <button class="btn br" onclick="viderCarnet()">🗑 Effacer tout le carnet</button>
+      </div>
+    </div>
+
+    <!-- ── FILTRER L'AFFICHAGE ── -->
+    <div id="sec-animer" class="sec">
+      <h2>📅 Filtrer l'affichage</h2>
+      <div class="aide">Appliquez des filtres — les spots correspondants s'affichent en couleur sur la carte, les autres sont grisés.</div>
+
+      <!-- Curseur période -->
+      <div class="bloc">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px">
+          <div class="lp">Filtrer par période</div>
+          <span style="font-size:12px;color:var(--gris)" id="anim-nb">0 spot(s)</span>
+        </div>
+        <div style="font-size:12px;color:var(--vf);margin-bottom:8px" id="anim-periode-label">Toute l'année</div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--gris);margin-bottom:2px">
+          <span>Jan</span><span>Fév</span><span>Mar</span><span>Avr</span><span>Mai</span><span>Jun</span>
+          <span>Jul</span><span>Aoû</span><span>Sep</span><span>Oct</span><span>Nov</span><span>Déc</span>
+        </div>
+        <div id="sl-per"></div>
+      </div>
+
+      <!-- Filtre année -->
+      <div class="bloc">
+        <div class="lp" style="margin-bottom:6px">Filtrer par année</div>
+        <div id="chips-ann" class="chips"><button class="chip actif" onclick="clicAnneeToutes(this)">Toutes</button></div>
+      </div>
+
+      <!-- Filtre espèce -->
+      <div class="bloc">
+        <div class="lp" style="margin-bottom:6px">Filtrer par espèce</div>
+        <div id="chips-esp-anim" class="chips"></div>
+      </div>
+
+      <!-- Liste résultats -->
+      <div class="bloc">
+        <div class="lp" style="margin-bottom:6px">Spots correspondants</div>
+        <div id="anim-liste"><div style="color:var(--gris);font-style:italic;font-size:12px">Aucun spot ne correspond à votre recherche</div></div>
+      </div>
+    </div>
+
+    <!-- ── OUTIL DE RECHERCHE (zones similaires) ── -->
+    <div id="sec-recherche" class="sec">
+      <h2>🔍 Outil de recherche</h2>
+      <div class="aide">Touchez un point sur la carte ou ajustez les curseurs — centrez la carte sur la zone qui vous intéresse — les zones similaires s'affichent en couleur.</div>
+
+      <!-- Curseur altitude -->
+      <div class="bloc">
+        <div class="lp" style="text-transform:none;font-size:14px">Altitude (m)</div>
+        <div id="alt-dyn" style="font-size:12px;color:var(--vf);margin-bottom:25px;min-height:20px"></div>
+        <div id="sl-alt"></div>
+      </div>
+
+      <!-- Curseur mixité forêt -->
+      <div class="bloc">
+        <div class="lp" style="text-transform:none;font-size:14px">Mixité forêt (% feuillus)</div>
+        <div style="font-size:11px;color:var(--gris);margin-top:1px">% conifères = 100 - % feuillus</div>
+        <div id="mix-dyn" style="font-size:12px;color:var(--vf);margin-bottom:25px;min-height:20px"></div>
+        <div id="sl-mix"></div>
+        <!-- Barre colorée représentant la palette conifères→feuillus -->
+        <div style="height:5px;border-radius:3px;background:linear-gradient(to right,#9400D3,#DC0000,#FF1493);margin:8px 0 0"></div>
+      </div>
+
+      <button class="btn bv" id="btn-filtrer" onclick="filtrer()">🔍 Afficher les zones correspondantes</button>
+      <button class="btn bg" onclick="effacerFiltrage()">✕ Effacer</button>
+    </div>
+
+    <!-- ── EXPORT / IMPORT ── -->
+    <div id="sec-data" class="sec">
+      <h2>💾 Import / Export</h2>
+      <div class="aide">Spots sauvegardés automatiquement dans ce navigateur. Exportez pour copie de secours ou transfert.</div>
+      <div class="bloc">
+        <div style="font-weight:bold;font-size:13px;margin-bottom:6px;color:var(--vf)">📤 Exporter</div>
+        <div style="font-size:12px;color:var(--gris);margin-bottom:8px">Générez le texte puis copiez-le.</div>
+        <button class="btn bv" onclick="exporterSpots()">Générer le texte</button>
+        <textarea id="z-exp" class="zt" placeholder="Le texte apparaîtra ici…" readonly></textarea>
+        <button class="btn bg" onclick="copierExport()">📋 Copier dans le presse-papier</button>
+      </div>
+      <div class="bloc">
+        <div style="font-weight:bold;font-size:13px;margin-bottom:6px;color:var(--vf)">📥 Importer</div>
+        <div style="font-size:12px;color:var(--gris);margin-bottom:8px">Collez un texte exporté précédemment.</div>
+        <textarea id="z-imp" class="zt" placeholder="Collez votre texte ici…"></textarea>
+        <button class="btn bo" onclick="importerSpots()">📥 Importer</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ================================================================
+//  CONSTANTES
+// ================================================================
+const MOIS=['Janvier','Février','Mars','Avril','Mai','Juin',
+            'Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+
+// Palette 8 couleurs pour distinguer les espèces
+const COULEURS=['#e07820','#2d7dd2','#c03020','#7ab840','#9b59b6','#e67e22','#1abc9c','#e74c3c'];
+
+// Description textuelle de la mixité forêt
+function descForet(m){
+  if(m===null)return'Hors forêt';
+  if(m<=20)return'Forêt de conifères (0–20%)';
+  if(m<=40)return'Mixte, dominante conifères (20–40%)';
+  if(m<=60)return'Forêt mixte équilibrée (40–60%)';
+  if(m<=80)return'Mixte, dominante feuillus (60–80%)';
+  return'Forêt de feuillus (80–100%)';
+}
+
+// Couleur associée à une espèce (stable selon ordre alphabétique)
+function couleur(e){
+  const es=[...new Set(spots.map(s=>s.espece.trim()))].sort();
+  return COULEURS[es.indexOf(e.trim())%COULEURS.length];
+}
+
+// ================================================================
+//  ÉTAT GLOBAL
+// ================================================================
+let spots    = JSON.parse(localStorage.getItem('carnet_spots')||'[]').map(({note,...s})=>s);
+let pt       = {lat:null,lon:null,alt:null,mix:null,foret:false};
+let mActif   = null;   // marqueur clic actif
+let spotActif = null;  // id du spot mis en évidence dans le carnet
+let cFil     = null;   // couche filtrage raster
+let panOuv   = false;  // panneau ouvert/fermé
+
+// Filtres onglet "Filtrer"
+let perMin=1, perMax=12;
+let annPer=new Set(), espPer=new Set();
+let slPer=null;
+
+// Sliders onglet "Recherche"
+let slAlt=null, slMix=null;
+
+// ================================================================
+//  RASTER : 4 tuiles terrain_NW/NE/SW/SE.tif (2 bandes Int16)
+//  bande 0 = altitude (m), bande 1 = mixité forêt (% feuillus, -9999 hors forêt)
+// ================================================================
+const _RES=0.000113512658631;
+const _GW=5.917981315365918, _GN=47.505149871452247;
+let Wt=22724, Ht=14590;
+let bt={w:_GW, s:_GN-14590*_RES, e:_GW+22724*_RES, n:_GN};
+let tMix=null, tAlt=null;
+let cvs=null, ctx=null;
+
+async function chargerRasters(){
+  const d=document.getElementById('load');
+  try{
+    tAlt=new Int16Array(Wt*Ht).fill(-9999);
+    tMix=new Int16Array(Wt*Ht).fill(-9999);
+    const tuiles=['terrain_NW.tif','terrain_NE.tif','terrain_SW.tif','terrain_SE.tif'];
+    for(let i=0;i<tuiles.length;i++){
+      d.textContent=`⏳ Chargement terrain (${i+1}/4)…`;
+      const img=await(await GeoTIFF.fromArrayBuffer(await(await fetch(tuiles[i])).arrayBuffer())).getImage();
+      const b=img.getBoundingBox();
+      const tW=img.getWidth(), tH=img.getHeight();
+      const data=await img.readRasters({samples:[0,1]});
+      const c0=Math.round((b[0]-_GW)/_RES);
+      const r0=Math.round((_GN-b[3])/_RES);
+      for(let r=0;r<tH;r++){
+        const src=r*tW, dst=(r0+r)*Wt+c0;
+        tAlt.set(data[0].subarray(src,src+tW),dst);
+        tMix.set(data[1].subarray(src,src+tW),dst);
+      }
+    }
+    cvs=document.createElement('canvas'); cvs.width=1; cvs.height=1;
+    ctx=cvs.getContext('2d');
+    d.style.display='none';
+  }catch(e){ d.textContent='⚠ Erreur : '+e.message; }
+}
+
+// ================================================================
+//  LECTURE PIXEL AU CLIC (terrain.tif 10m)
+// ================================================================
+function lire(lat,lon){
+  if(!tMix)return{alt:null,mix:null,foret:false};
+  const c=Math.round((lon-bt.w)/(bt.e-bt.w)*(Wt-1));
+  const r=Math.round((bt.n-lat)/(bt.n-bt.s)*(Ht-1));
+  if(c<0||c>=Wt||r<0||r>=Ht)return{alt:null,mix:null,foret:false};
+  const i=r*Wt+c;
+  const mix=tMix[i]; const alt=tAlt[i];
+  return{
+    alt:alt===-9999?null:Math.round(alt),
+    mix:mix===-9999?null:Math.round(mix),
+    foret:mix!==-9999
+  };
+}
+
+// ================================================================
+//  CARTE LEAFLET
+// ================================================================
+const carte=L.map('carte',{
+  center:[46.5,7],zoom:9,zoomControl:true,
+  minZoom:6,zoomSnap:0.5,
+  maxBounds:[[-10,-30],[72,45]], // emprise Europe
+  maxBoundsViscosity:1
+});
+L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap © CARTO',subdomains:'abcd',maxZoom:19}).addTo(carte);
+carte.fitBounds([[45.849,5.918],[47.505,8.498]]);
+
+// Pane dédié pour le masque — zIndex 650 = au-dessus des tuiles OSM (400)
+// mais en dessous des marqueurs (700+)
+carte.createPane('masque'); carte.getPane('masque').style.zIndex=650; carte.getPane('masque').style.pointerEvents='none';
+fetch('masque_monde.geojson').then(r=>r.json()).then(d=>{
+  // Masque vert pastel hors Suisse romande
+  // ← Modifier fillOpacity pour ajuster l'intensité (0=invisible, 1=opaque)
+  L.geoJSON(d,{pane:'masque',style:{color:'#ffffff',weight:2,opacity:0.6,fillColor:'#000000',fillOpacity:0.32}}).addTo(carte);
+}).catch(()=>{});
+
+// Pane dédié pour les spots — zIndex 700 = au-dessus de tout (masque, rasters)
+carte.createPane('spots'); carte.getPane('spots').style.zIndex=700;
+// Forcer les popups au-dessus des marqueurs
+carte.getPane('popupPane').style.zIndex=750;
+carte.getPane('tooltipPane').style.zIndex=760;
+
+// Groupe des marqueurs spots (utilise le pane 'spots')
+const gSpots=L.layerGroup().addTo(carte);
+
+carte.on('click',function(e){
+  if(spotActif){
+    const old=document.getElementById('spot-card-'+spotActif);
+    if(old) old.style.borderLeft='4px solid '+(old.dataset.color||'#ddd');
+  }
+  spotActif=null;
+  const lat=e.latlng.lat, lon=e.latlng.lng;
+
+  // Marqueur orange au point cliqué
+  if(mActif)carte.removeLayer(mActif);
+  mActif=L.marker([lat,lon],{
+    pane:'spots',
+    icon:L.divIcon({
+      html:'<svg width="26" height="36" viewBox="0 0 26 36" xmlns="http://www.w3.org/2000/svg"><path d="M13 0C5.8 0 0 5.8 0 13C0 22 13 36 13 36C13 36 26 22 26 13C26 5.8 20.2 0 13 0Z" fill="#d42020" stroke="#fff" stroke-width="2.5"/><circle cx="13" cy="12" r="5" fill="rgba(255,255,255,0.85)"/></svg>',
+      className:'',iconSize:[26,36],iconAnchor:[13,36]
+    }),
+    zIndexOffset:1000
+  }).addTo(carte);
+
+  // Lit les valeurs raster
+  const{alt,mix,foret}=lire(lat,lon);
+  pt={lat,lon,alt,mix,foret};
+
+  // Affiche la bulle
+  document.getElementById('b-alt').textContent=alt!==null?alt+' m':'Hors zone';
+  document.getElementById('b-coords').textContent=`${lat.toFixed(4)}°, ${lon.toFixed(4)}°`;
+  if(foret&&mix!==null){
+    document.getElementById('b-mix').textContent=mix+'% feuillu';
+    document.getElementById('b-coniferes').textContent=(100-mix)+'% conifères';
+    document.getElementById('b-type').textContent=descForet(mix);
+  }else{
+    document.getElementById('b-mix').textContent='';
+    document.getElementById('b-coniferes').textContent='';
+    document.getElementById('b-type').textContent='Hors forêt';
+  }
+  document.getElementById('b-maps').href=`https://www.google.com/maps?q=${lat},${lon}`;
+  document.getElementById('bulle').style.display='block';
+
+  // Pré-remplit les curseurs recherche (±150m alt, ±15% mix)
+  if(alt&&slAlt){ slAlt.set([Math.max(300,alt-150),Math.min(4600,alt+150)]); document.getElementById('alt-dyn').textContent=alt+' m ± 150 m'; }
+  if(mix!==null&&slMix){ slMix.set([Math.max(0,mix-15),Math.min(100,mix+15)]); document.getElementById('mix-dyn').textContent=mix+' % ± 15 %'; }
+});
+
+// ================================================================
+//  BULLE / PANNEAU / MODALE
+// ================================================================
+function fermerBulle(){ document.getElementById('bulle').style.display='none'; }
+function ouvrirPan(){ panOuv=true; document.getElementById('pan').classList.add('ouvert'); }
+function fermerPan(){ panOuv=false; document.getElementById('pan').classList.remove('ouvert'); }
+function togglePan(){ panOuv?fermerPan():ouvrirPan(); }
+
+function ouvrirModale(){
+  document.getElementById('mfond').classList.add('v');
+  document.getElementById('f-dat').value=new Date().toISOString().split('T')[0];
+  document.getElementById('f-esp').focus();
+}
+function fermerModale(e){
+  if(e&&e.target!==document.getElementById('mfond'))return;
+  document.getElementById('mfond').classList.remove('v');
+  document.getElementById('f-esp').value='';
+}
+
+// ================================================================
+//  GPS
+// ================================================================
+const SR_BOUNDS=[[45.849,5.918],[47.505,8.498]];
+function meLocaliser(btn){
+  if(!navigator.geolocation){alert('GPS non disponible.');return;}
+  if(btn){btn.textContent='⏳…';btn.disabled=true;}
+  navigator.geolocation.getCurrentPosition(
+    p=>{
+      if(btn){btn.textContent='📡 GPS';btn.disabled=false;}
+      const lat=p.coords.latitude, lon=p.coords.longitude;
+      carte.fire('click',{latlng:L.latLng(lat,lon)});
+      fermerPan();
+      carte.setView([lat,lon],11);
+    },
+    e=>{
+      if(btn){btn.textContent='📡 GPS';btn.disabled=false;}
+      alert('Impossible : '+e.message);
+    },
+    {enableHighAccuracy:true,timeout:10000}
+  );
+}
+
+// ================================================================
+//  CRUD SPOTS
+// ================================================================
+function save(){ localStorage.setItem('carnet_spots',JSON.stringify(spots)); }
+
+function enregistrerSpot(){
+  const esp=document.getElementById('f-esp').value.trim();
+  const dat=document.getElementById('f-dat').value;
+  if(!esp){alert('Indiquez une espèce.');return;}
+  if(!dat){alert('Indiquez une date.');return;}
+  if(!pt.lat){alert('Touchez la carte d\'abord.');return;}
+  spots.push({id:Date.now(),lat:pt.lat,lon:pt.lon,alt:pt.alt,mix:pt.mix,espece:esp,date:dat});
+  save(); fermerModale(); afficher(); majFiltres();
+  alert(`✓ "${esp}" enregistré !`);
+}
+function supprimerSpot(id){
+  if(!confirm('Supprimer ce spot ?'))return;
+  spots=spots.filter(s=>s.id!==id); save(); afficher(); majFiltres();
+}
+function viderCarnet(){
+  if(!confirm('Effacer TOUS vos spots ?'))return;
+  spots=[]; save(); afficher(); majFiltres();
+}
+function majStats(){
+  document.getElementById('st-spots').textContent=spots.length;
+  document.getElementById('st-esp').textContent=new Set(spots.map(s=>s.espece.toLowerCase().trim())).size;
+}
+
+// ================================================================
+//  AFFICHAGE CARNET (groupé par espèce, dépliable)
+// ================================================================
+function afficher(){
+  gSpots.clearLayers();
+  majStats();
+  const liste=document.getElementById('liste-spots');
+  if(!spots.length){liste.innerHTML='<div class="vide"><span class="gi">🍄</span>Carnet vide — touchez la carte !</div>';return;}
+
+  // Marqueurs carte (pane 'spots' = toujours au-dessus)
+  spots.forEach(s=>{
+    const m=L.circleMarker([s.lat,s.lon],{pane:'spots',radius:7,fillColor:couleur(s.espece),color:'#fff',weight:1.5,fillOpacity:.85});
+    m.bindTooltip(`<b style="font-style:italic">${s.espece}</b><br>📅 ${s.date}`,{direction:'top',offset:[0,-8]});
+    m.on('click',(e)=>{L.DomEvent.stopPropagation(e);highlightSpot(s.id);}); // id est string OK
+    m.addTo(gSpots);
+  });
+
+  // Groupement alphabétique par espèce
+  const par={};
+  spots.forEach(s=>{const k=s.espece.trim();if(!par[k])par[k]=[];par[k].push(s);});
+  liste.innerHTML='';
+  Object.keys(par).sort().forEach(esp=>{
+    const ss=par[esp].sort((a,b)=>b.date.localeCompare(a.date)), nb=ss.length, c=couleur(esp);
+    const h=document.createElement('div');
+    h.style.cssText=`display:flex;justify-content:space-between;align-items:center;
+      padding:9px 12px;background:${c};color:#fff;border-radius:var(--r);
+      margin-bottom:4px;cursor:pointer;font-weight:bold;font-size:13px;font-style:italic`;
+    h.innerHTML=`<span>🍄 ${esp}</span><span style="font-size:11px;font-style:normal;opacity:.85">${nb} spot${nb>1?'s':''} ▸</span>`;
+    h.dataset.espece=esp; h.dataset.nb=nb; h.dataset.ouvert='false';
+    const corps=document.createElement('div'); corps.style.marginBottom='10px';corps.style.display='none';
+    ss.forEach(s=>{
+      const div=document.createElement('div'); div.className='sc';
+      div.style.cssText='border-left:4px solid '+c+';transition:border-left 0.3s,box-shadow 0.3s';
+      div.id='spot-card-'+s.id; div.dataset.color=c;
+
+      // Ligne 1 : 📅 date · lat° lon°
+      const row1=document.createElement('div');
+      row1.style.cssText='font-size:12px;color:var(--gris);margin-bottom:3px';
+      row1.textContent='📅 '+s.date+' · 📍 '+s.lat.toFixed(4)+'° '+s.lon.toFixed(4)+'°';
+      div.appendChild(row1);
+
+      // Ligne 2 : ⛰ altitude · 🌿 Conifères : X% · Feuillus : Y%
+      const row2=document.createElement('div');
+      row2.style.cssText='display:flex;align-items:center;gap:5px;font-size:11px;color:var(--gris);margin-bottom:3px';
+      let r2='';
+      if(s.alt!==null) r2+='⛰ '+s.alt+' m';
+      if(s.mix!==null){if(r2)r2+=' · ';r2+='🌿 Conifères : '+(100-s.mix)+'% · Feuillus : '+s.mix+'%';}
+      else{if(r2)r2+=' · ';r2+='🌿 Hors forêt';}
+      const r2lbl=document.createElement('span');
+      r2lbl.textContent=r2; r2lbl.style.flex='1';
+      row2.appendChild(r2lbl);
+      div.appendChild(row2);
+
+      // Ligne 4 : 📍 Centrer · 🗺 · ✕
+      const row4=document.createElement('div');
+      row4.style.cssText='display:flex;align-items:center;gap:4px;margin-top:2px';
+      const centrerBtn=document.createElement('button');
+      centrerBtn.style.cssText='background:#eee;border:none;border-radius:5px;padding:3px 8px;font-size:12px;cursor:pointer;font-weight:bold';
+      centrerBtn.textContent='📍 Centrer';
+      centrerBtn.onclick=()=>centrerEtHighlight(s.lat,s.lon,s.espece,s.id);
+      row4.appendChild(centrerBtn);
+      const mapsBtn=document.createElement('button');
+      mapsBtn.style.cssText='background:#eee;border:none;border-radius:5px;padding:3px 7px;font-size:12px;cursor:pointer';
+      mapsBtn.textContent='🗺';
+      mapsBtn.onclick=()=>window.open('https://www.google.com/maps?q='+s.lat+','+s.lon,'_blank');
+      row4.appendChild(mapsBtn);
+      const delBtn=document.createElement('button');
+      delBtn.style.cssText='background:#eee;border:none;border-radius:5px;color:#c03020;font-size:12px;font-weight:bold;cursor:pointer;padding:3px 7px';
+      delBtn.textContent='✕';
+      delBtn.onclick=()=>supprimerSpot(s.id);
+      row4.appendChild(delBtn);
+      div.appendChild(row4);
+
+      corps.appendChild(div);
+    });
+    h.onclick=()=>{
+      const ouv=h.dataset.ouvert!=='false';
+      const newOuv=!ouv;
+      h.dataset.ouvert=newOuv?'true':'false';
+      corps.style.display=newOuv?'block':'none';
+      h.querySelector('span:last-child').textContent=`${nb} spot${nb>1?'s':''} ${newOuv?'▾':'▸'}`; 
+    };
+    liste.appendChild(h); liste.appendChild(corps);
+  });
+}
+function _panOffset(){
+  if(panOuv){
+    const panH=document.getElementById('pan').offsetHeight;
+    carte.panBy([0,Math.round(panH/2)]);
+  }
+}
+function centrer(lat,lon,esp){
+  carte.setView([lat,lon],14,{animate:false});
+  if(mActif)carte.removeLayer(mActif);
+  const s=spots.find(x=>x.lat===lat&&x.lon===lon&&x.espece===esp);
+  const date=s?s.date:'';
+  mActif=L.circleMarker([lat,lon],{pane:'spots',radius:9,fillColor:couleur(esp),color:'#fff',weight:2.5,fillOpacity:.95})
+    .bindPopup(`<b style="font-style:italic">${esp}</b><br>📅 ${date}`,{closeButton:false,offset:[0,-6],autopan:false})
+    .addTo(carte);
+  mActif.openPopup();
+  _panOffset(); // après openPopup pour éviter que l'auto-pan Leaflet ne l'annule
+}
+function centrerEtHighlight(lat,lon,esp,id){
+  fermerPan();
+  centrer(lat,lon,esp);
+}
+function highlightSpot(id){
+  const s=spots.find(x=>x.id===id);
+  if(!s) return;
+
+  const secEl=document.querySelector('.sec.active');
+  const secNom=secEl?secEl.id.replace('sec-',''):'carnet';
+
+  if(secNom==='carnet'){
+    const wasOpen=panOuv;
+    centrer(s.lat,s.lon,s.espece);
+    ouvrirPan();
+    setTimeout(()=>{
+      if(!wasOpen){
+        const panH=document.getElementById('pan').offsetHeight;
+        carte.panBy([0,Math.round(panH/2)]);
+      }
+      _ouvrirGroupeEspece(s.espece);
+      _highlightCarnet(id, couleur(s.espece));
+    }, wasOpen?50:350);
+  } else {
+    // Arrière-plan : mise en évidence dans le carnet sans changer d'onglet
+    _ouvrirGroupeEspece(s.espece);
+    _highlightCarnet(id, couleur(s.espece));
+    if(secNom==='recherche'){
+      if(s.alt!=null&&slAlt){ slAlt.set([Math.max(300,s.alt-150),Math.min(4600,s.alt+150)]); document.getElementById('alt-dyn').textContent=s.alt+' m ± 150 m'; }
+      if(s.mix!==null&&slMix){ slMix.set([Math.max(0,s.mix-15),Math.min(100,s.mix+15)]); document.getElementById('mix-dyn').textContent=s.mix+' % ± 15 %'; }
+    }
+    centrer(s.lat,s.lon,s.espece); // zoom + popup espèce+date comme "📍 Centrer"
+  }
+}
+function _ouvrirGroupeEspece(esp){
+  const liste=document.getElementById('liste-spots');
+  if(!liste) return;
+  liste.querySelectorAll('[data-espece]').forEach(h=>{
+    const isEsp=(h.dataset.espece===esp);
+    const corps=h.nextElementSibling;
+    if(!corps) return;
+    const nb=parseInt(h.dataset.nb)||0;
+    h.dataset.ouvert=isEsp?'true':'false';
+    corps.style.display=isEsp?'block':'none';
+    const lbl=h.querySelector('span:last-child');
+    if(lbl) lbl.textContent=`${nb} spot${nb>1?'s':''} ${isEsp?'▾':'▸'}`;
+  });
+}
+function _highlightCarnet(id, c){
+  if(spotActif && spotActif!==id){
+    const old=document.getElementById('spot-card-'+spotActif);
+    if(old) old.style.borderLeft='4px solid '+old.dataset.color;
+  }
+  spotActif=id;
+  const el=document.getElementById('spot-card-'+id);
+  if(!el) return;
+  el.dataset.color=c;
+  el.scrollIntoView({behavior:'smooth',block:'center'});
+  el.style.boxShadow='0 0 0 2px #4CAF50';
+  setTimeout(()=>el.style.boxShadow='',1800);
+  el.style.borderLeft='10px solid '+c;
+}
+// ================================================================
+//  SLIDERS
+// ================================================================
+function initSliders(){
+  // ── Curseur période (onglet Filtrer) ──
+  slPer=noUiSlider.create(document.getElementById('sl-per'),{
+    start:[1,12],connect:true,range:{min:1,max:12},step:1,
+    tooltips:[{to:v=>MOIS[Math.round(v)-1].substr(0,3)},{to:v=>MOIS[Math.round(v)-1].substr(0,3)}]
+  });
+  slPer.on('update',v=>{
+    perMin=Math.round(v[0]); perMax=Math.round(v[1]);
+    document.getElementById('anim-periode-label').textContent=
+      perMin===perMax?MOIS[perMin-1]:MOIS[perMin-1]+' → '+MOIS[perMax-1];
+    rafraichirAnim();
+  });
+
+  // ── Curseur altitude (onglet Recherche) ──
+  slAlt=noUiSlider.create(document.getElementById('sl-alt'),{
+    start:[400,1200],connect:true,range:{min:300,max:4600},step:1,
+    tooltips:[{to:v=>Math.round(v)+'m'},{to:v=>Math.round(v)+'m'}]
+  });
+  slAlt.on('slide',v=>{
+    document.getElementById('alt-dyn').textContent=Math.round(v[0])+' m — '+Math.round(v[1])+' m';
+  });
+
+  // ── Curseur mixité (onglet Recherche) ──
+  slMix=noUiSlider.create(document.getElementById('sl-mix'),{
+    start:[0,100],connect:true,range:{min:0,max:100},step:1,
+    tooltips:[{to:v=>Math.round(v)+'%'},{to:v=>Math.round(v)+'%'}]
+  });
+  slMix.on('slide',v=>{
+    document.getElementById('mix-dyn').textContent=Math.round(v[0])+' % — '+Math.round(v[1])+' %';
+  });
+}
+
+// ================================================================
+//  FILTRAGE RASTER — palette mixité : violet (conifères) → jaune (feuillus)
+// ================================================================
+function mixRGB(mix){
+  const stops=[[0,[148,0,211]],[50,[220,0,0]],[100,[255,20,147]]];
+  for(let i=0;i<stops.length-1;i++){
+    const[v0,c0]=stops[i],[v1,c1]=stops[i+1];
+    if(mix>=v0&&mix<=v1){const t=(mix-v0)/(v1-v0);return[c0[0]+(c1[0]-c0[0])*t,c0[1]+(c1[1]-c0[1])*t,c0[2]+(c1[2]-c0[2])*t].map(Math.round);}
+  }
+}
+
+let filActif=false;
+let aMinG,aMaxG,mMinG,mMaxG;
+let zonesCache=new Map(); // key -> {url, s,w,n,e}
+
+function majBoutonFiltrer(){
+  const btn=document.getElementById('btn-filtrer');
+  if(!btn)return;
+  btn.textContent='🔍 Afficher les correspondances';
+  btn.disabled=false; btn.style.opacity='1';
+}
+
+function filtrer(){
+  if(!tMix)return;
+  // Signal immédiat dès le clic
+  const btn=document.getElementById('btn-filtrer');
+  if(btn){btn.textContent='⏳ Calcul…';btn.disabled=true;btn.style.opacity='0.6';}
+
+  const[aMin,aMax]=slAlt.get().map(v=>Math.round(v));
+  const[mMin,mMax]=slMix.get().map(v=>Math.round(v));
+
+  if(aMin!==aMinG||aMax!==aMaxG||mMin!==mMinG||mMax!==mMaxG){
+    aMinG=aMin;aMaxG=aMax;mMinG=mMin;mMaxG=mMax;
+    zonesCache.clear();
+    if(cFil){carte.removeLayer(cFil);cFil=null;}
+  }
+  filActif=true;
+
+  const res=(bt.e-bt.w)/Wt;
+  const demi=Math.sqrt(6000000)*res/2;
+  const panH=document.getElementById('pan').offsetHeight;
+  const ms=carte.getSize();
+  const visCx=carte.containerPointToLatLng([ms.x/2,(ms.y-panH)/2]);
+
+  carte.fitBounds([
+    [visCx.lat-demi, visCx.lng-demi*1.4],
+    [visCx.lat+demi, visCx.lng+demi*1.4]
+  ],{animate:false,paddingBottomRight:[0,panH]});
+
+  setTimeout(()=>{
+    const bounds=carte.getBounds();
+    const rW=Math.max(bounds.getWest(),bt.w), rE=Math.min(bounds.getEast(),bt.e);
+    const rN=Math.min(bounds.getNorth(),bt.n), rS=Math.max(bounds.getSouth(),bt.s);
+    if(rW>=rE||rS>=rN){
+      const t=document.getElementById('toast-deplacement');
+      t.textContent='📍 Revenez dans la zone de données';
+      t.classList.add('visible');
+      setTimeout(()=>t.classList.remove('visible'),5000);
+      majBoutonFiltrer();return; // panneau reste ouvert
+    }
+    const c0=Math.max(0,Math.floor((rW-bt.w)/res));
+    const c1=Math.min(Wt-1,Math.ceil((rE-bt.w)/res));
+    const r0=Math.max(0,Math.floor((bt.n-rN)/res));
+    const r1=Math.min(Ht-1,Math.ceil((bt.n-rS)/res));
+    _calculerEmprise(c0,c1,r0,r1,res);
+  },50);
+}
+
+function _calculerEmprise(c0,c1,r0,r1,res){
+  const cW=c1-c0+1, rH=r1-r0+1;
+  // Sous-échantillonnage ×2 : 4× moins de pixels, canvas plus petit → PNG rapide
+  const step=2;
+  const svW=Math.ceil(cW/step), svH=Math.ceil(rH/step);
+  // Bounds géographiques alignées sur la grille pixel (élimine le décalage)
+  const rW_al=bt.w+c0*res, rN_al=bt.n-r0*res;
+  const rE_al=rW_al+svW*step*res, rS_al=rN_al-svH*step*res;
+  const key=c0+'_'+r0+'_'+c1+'_'+r1;
+
+  const btn=document.getElementById('btn-filtrer');
+
+  if(zonesCache.has(key)){
+    const z=zonesCache.get(key);
+    if(!cFil){
+      cFil=L.imageOverlay(z.url,[[z.s,z.w],[z.n,z.e]],
+        {opacity:.82,interactive:false,zIndex:200}).addTo(carte);
+    }
+    majBoutonFiltrer();
+    fermerPan();
+    _toastSucces();
+    return;
+  }
+
+  if(btn){btn.textContent='⏳ Rendu…';}
+
+  setTimeout(()=>{
+    cvs.width=svW; cvs.height=svH;
+    const img=ctx.createImageData(svW,svH), buf=img.data;
+    let pixCount=0;
+    for(let ry=0;ry<svH;ry++){
+      const row=r0+ry*step; if(row>r1)break;
+      for(let rx=0;rx<svW;rx++){
+        const col=c0+rx*step; if(col>c1)break;
+        const i=row*Wt+col;
+        const m=tMix[i]; if(m===-9999||m<mMinG||m>mMaxG)continue;
+        const a=tAlt[i]; if(a===-9999||a<aMinG||a>aMaxG)continue;
+        const[r,g,b]=mixRGB(m);
+        const j=(ry*svW+rx)*4;
+        buf[j]=r;buf[j+1]=g;buf[j+2]=b;buf[j+3]=185;
+        pixCount++;
+      }
+    }
+    majBoutonFiltrer();
+    if(pixCount===0){
+      const t=document.getElementById('toast-deplacement');
+      t.textContent='Aucune zone correspondante — critères trop restrictifs';
+      t.classList.add('visible');
+      setTimeout(()=>t.classList.remove('visible'),4500);
+      return;
+    }
+    ctx.putImageData(img,0,0);
+    const url=cvs.toDataURL('image/png');
+    zonesCache.set(key,{url,s:rS_al,w:rW_al,n:rN_al,e:rE_al});
+    if(cFil){carte.removeLayer(cFil);cFil=null;}
+    cFil=L.imageOverlay(url,[[rS_al,rW_al],[rN_al,rE_al]],
+      {opacity:.82,interactive:false,zIndex:200}).addTo(carte);
+    fermerPan();
+    _toastSucces();
+  },16);
+}
+
+function _toastSucces(){
+  setTimeout(()=>{
+    const t=document.getElementById('toast-deplacement');
+    t.textContent='🗺 Déplacez-vous pour afficher d\'autres zones';
+    t.classList.add('visible');
+    setTimeout(()=>t.classList.remove('visible'),3000);
+  },350);
+}
+
+function effacerFiltrage(){
+  if(cFil){carte.removeLayer(cFil);cFil=null;}
+  // Nettoyer tout résidu décalé (defensive)
+  carte.eachLayer(l=>{ if(l._url&&l.options&&l.options.zIndex===200) carte.removeLayer(l); });
+  filActif=false;
+  majBoutonFiltrer();
+}
+
+
+// ================================================================
+//  FILTRES ONGLET "FILTRER" (période + année + espèce)
+// ================================================================
+function majFiltres(){
+  // Chips années
+  const annees=[...new Set(spots.map(s=>s.date.split('-')[0]))].sort().reverse();
+  const ca=document.getElementById('chips-ann'); ca.innerHTML='';
+  const btA=mkChip('Toutes',annPer.size===0,()=>{annPer=new Set();document.querySelectorAll('.ca').forEach(b=>resetChip(b));btA.classList.add('actif');rafraichirAnim();});
+  ca.appendChild(btA);
+  annees.forEach(a=>{
+    const c=mkChip(a,annPer.has(a)); c.classList.add('ca');
+    c.onclick=()=>toggleSet(annPer,a,c,btA,'#2d5a1b',rafraichirAnim); ca.appendChild(c);
+  });
+
+  // Chips espèces
+  const especes=[...new Set(spots.map(s=>s.espece.trim()))].sort();
+  const ce=document.getElementById('chips-esp-anim'); ce.innerHTML='';
+  const btE=mkChip('Toutes',espPer.size===0,()=>{espPer=new Set();document.querySelectorAll('.ce').forEach(b=>resetChip(b));btE.classList.add('actif');rafraichirAnim();});
+  ce.appendChild(btE);
+  especes.forEach(e=>{
+    const cl=couleur(e), c=mkChip(e,espPer.has(e),null,cl); c.classList.add('ce');
+    c.onclick=()=>toggleSet(espPer,e,c,btE,cl,rafraichirAnim); ce.appendChild(c);
+  });
+
+  rafraichirAnim();
+}
+
+// Compatibilité avec ancien onclick HTML
+function clicAnneeToutes(btn){ annPer=new Set(); document.querySelectorAll('.ca').forEach(b=>resetChip(b)); btn.classList.add('actif'); rafraichirAnim(); }
+
+function rafraichirAnim(){
+  // Sépare spots dans/hors période selon tous les filtres
+  const dans=spots.filter(s=>{
+    const m=parseInt(s.date.split('-')[1]);
+    return m>=perMin&&m<=perMax
+      &&(annPer.size===0||annPer.has(s.date.split('-')[0]))
+      &&(espPer.size===0||espPer.has(s.espece.trim()));
+  });
+  const hors=spots.filter(s=>{
+    const m=parseInt(s.date.split('-')[1]);
+    return!(m>=perMin&&m<=perMax)
+      &&(annPer.size===0||annPer.has(s.date.split('-')[0]))
+      &&(espPer.size===0||espPer.has(s.espece.trim()));
+  });
+
+  document.getElementById('anim-nb').textContent=dans.length+' spot(s)';
+
+  // Liste
+  const liste=document.getElementById('anim-liste');
+  if(!dans.length){liste.innerHTML='<div style="color:var(--gris);font-style:italic;font-size:12px">Aucun spot ne correspond à votre recherche</div>';}
+  else{
+    liste.innerHTML='';
+    dans.sort((a,b)=>a.espece.trim().localeCompare(b.espece.trim(),'fr')||b.date.localeCompare(a.date)).forEach(s=>{
+      const c=couleur(s.espece),d=document.createElement('div');
+      d.style.cssText='padding:6px 0;border-bottom:1px solid #eee;cursor:pointer;display:flex;align-items:flex-start;gap:8px';
+      d.innerHTML=`<div style="width:10px;height:10px;border-radius:50%;background:${c};flex-shrink:0;margin-top:3px"></div>
+        <div><div style="font-style:italic;font-weight:bold;font-size:13px">${s.espece}</div>
+        <div style="font-size:11px;color:var(--gris)">📅 ${s.date}${s.alt?' · ⛰ '+s.alt+'m':''}${s.mix!==null?' · 🌿 '+s.mix+'%':''}</div>
+        </div>`;
+      d.onclick=()=>centrer(s.lat,s.lon,s.espece); liste.appendChild(d);
+    });
+  }
+
+  // Marqueurs carte — pane 'spots' = toujours au-dessus du raster filtrage
+  gSpots.clearLayers();
+  hors.forEach(s=>{
+    const m=L.circleMarker([s.lat,s.lon],{pane:'spots',radius:5,fillColor:'#555',color:'#333',weight:1,fillOpacity:.6});
+    m.bindTooltip(`<b style="font-style:italic">${s.espece}</b><br>${s.date}`,{direction:'top',offset:[0,-8]});
+    m.on('click',(e)=>{L.DomEvent.stopPropagation(e);highlightSpot(s.id);});
+    m.addTo(gSpots);
+  });
+  dans.forEach(s=>{
+    const m=L.circleMarker([s.lat,s.lon],{pane:'spots',radius:10,fillColor:couleur(s.espece),color:'#fff',weight:2,fillOpacity:.9});
+    m.bindTooltip(`<b style="font-style:italic">${s.espece}</b><br>${s.date}`,{direction:'top',offset:[0,-8]});
+    m.on('click',(e)=>{L.DomEvent.stopPropagation(e);highlightSpot(s.id);});
+    m.addTo(gSpots);
+  });
+}
+
+// ================================================================
+//  EXPORT / IMPORT
+// ================================================================
+function exporterSpots(){
+  if(!spots.length){alert('Carnet vide.');return;}
+  const clean=spots.map(({note,...s})=>s);
+  document.getElementById('z-exp').value=JSON.stringify(clean); alert('✓ Texte généré !');
+}
+function copierExport(){
+  const z=document.getElementById('z-exp');
+  if(!z.value){alert('Générez d\'abord.');return;}
+  navigator.clipboard.writeText(z.value).then(()=>alert('✓ Copié !')).catch(()=>{z.select();alert('Copiez manuellement.');});
+}
+function importerSpots(){
+  const txt=document.getElementById('z-imp').value.trim();
+  if(!txt){alert('Collez votre texte.');return;}
+  try{
+    const imp=JSON.parse(txt); if(!Array.isArray(imp))throw 0;
+    if(!confirm(`Importer ${imp.length} spot(s) ?`))return;
+    const ids=new Set(spots.map(s=>s.id)); let n=0;
+    imp.forEach(({note,...s})=>{if(!ids.has(s.id)){spots.push(s);n++;}});
+    save(); afficher(); majFiltres();
+    document.getElementById('z-imp').value=''; alert(`✓ ${n} importé(s).`);
+  }catch{alert('Texte invalide.');}
+}
+
+// ================================================================
+//  NAVIGATION
+// ================================================================
+const LABELS={carnet:'CARNET',animer:'FILTRER',recherche:'RECHERCHE',data:'DONNÉES'};
+function nav(nom,btn){
+  const curSec=document.querySelector('.sec.active');
+  // Reclique sur carnet déjà actif → reset vue carte uniquement, rien d'autre
+  if(curSec&&curSec.id==='sec-carnet'&&nom==='carnet'){
+    const panH=document.getElementById('pan').offsetHeight;
+    carte.fitBounds(SR_BOUNDS,{animate:false,paddingBottomRight:[0,panH],paddingTopLeft:[0,10]});
+    return;
+  }
+  if(curSec&&curSec.id==='sec-animer'&&nom!=='animer') afficher();
+  // Quitter Recherche → retirer l'overlay (cache conservé pour retour rapide)
+  if(curSec&&curSec.id==='sec-recherche'&&nom!=='recherche'){
+    if(cFil){carte.removeLayer(cFil);cFil=null;}
+  }
+
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.onglet').forEach(o=>o.classList.remove('actif'));
+  document.getElementById('sec-'+nom).classList.add('active');
+  btn.classList.add('actif');
+  document.getElementById('pan-label').textContent=LABELS[nom]||nom.toUpperCase();
+  ouvrirPan();
+  // Toujours revenir en haut du panneau (carnet override via _highlightCarnet)
+  document.querySelector('#pan .corps').scrollTop=0;
+
+  if(nom==='carnet'){
+    afficher();
+    const panH=document.getElementById('pan').offsetHeight;
+    carte.fitBounds(SR_BOUNDS,{animate:false,paddingBottomRight:[0,panH],paddingTopLeft:[0,10]});
+    if(spotActif){
+      const sa=spots.find(x=>x.id===spotActif);
+      if(sa) setTimeout(()=>{_ouvrirGroupeEspece(sa.espece);_highlightCarnet(spotActif,couleur(sa.espece));},100);
+    }
+  }
+  if(nom==='animer'){
+    majFiltres();
+    const panH=document.getElementById('pan').offsetHeight;
+    carte.fitBounds(SR_BOUNDS,{animate:false,paddingBottomRight:[0,panH],paddingTopLeft:[0,10]});
+  }
+  if(nom==='recherche'){
+    const panH=document.getElementById('pan').offsetHeight;
+    carte.fitBounds(SR_BOUNDS,{animate:false,paddingBottomRight:[0,panH],paddingTopLeft:[0,10]});
+  }
+}
+
+// ================================================================
+//  HELPERS CHIPS
+// ================================================================
+function mkChip(txt,actif,onclick,bg){
+  const b=document.createElement('button');
+  b.className='chip'+(actif?' actif':''); b.textContent=txt;
+  if(onclick)b.onclick=onclick;
+  if(bg&&actif){b.style.background=bg;b.style.borderColor=bg;b.style.color='#fff';}
+  return b;
+}
+function resetChip(b){b.classList.remove('actif');b.style.background='';b.style.borderColor='';b.style.color='';}
+function toggleSet(set,val,chip,btnT,bg,cb){
+  if(set.has(val)){set.delete(val);resetChip(chip);}
+  else{set.add(val);chip.classList.add('actif');chip.style.background=bg;chip.style.borderColor=bg;chip.style.color='#fff';btnT.classList.remove('actif');}
+  if(set.size===0)btnT.classList.add('actif');
+  cb();
+}
+
+// ================================================================
+//  DÉMARRAGE
+// ================================================================
+chargerRasters();
+initSliders();
+afficher();
+majFiltres();
+</script>
+</body>
+</html>
