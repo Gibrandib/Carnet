@@ -252,7 +252,7 @@
         <div id="mix-dyn" style="font-size:12px;color:var(--vf);margin-bottom:25px;min-height:20px"></div>
         <div id="sl-mix"></div>
         <!-- Barre colorée représentant la palette conifères→feuillus -->
-        <div style="height:5px;border-radius:3px;background:linear-gradient(to right,#1A6FBF,#BF1A1A);margin:8px 0 0"></div>
+        <div style="height:5px;border-radius:3px;background:linear-gradient(to right,#0055FF,#9900FF,#FF0000);margin:8px 0 0"></div>
       </div>
 
       <button class="btn bv" id="btn-filtrer" onclick="filtrer()">🔍 Afficher les zones correspondantes</button>
@@ -722,11 +722,14 @@ function initSliders(){
 }
 
 // ================================================================
-//  FILTRAGE RASTER — palette mixité : bleu (conifères) → rouge (feuillus)
+//  FILTRAGE RASTER — palette mixité : bleu électrique → violet → rouge vif
 // ================================================================
 function mixRGB(mix){
-  const t=mix/100;
-  return[Math.round(26+165*t),Math.round(111-85*t),Math.round(191-165*t)];
+  const stops=[[0,[0,85,255]],[50,[153,0,255]],[100,[255,0,0]]];
+  for(let i=0;i<stops.length-1;i++){
+    const[v0,c0]=stops[i],[v1,c1]=stops[i+1];
+    if(mix>=v0&&mix<=v1){const t=(mix-v0)/(v1-v0);return[c0[0]+(c1[0]-c0[0])*t,c0[1]+(c1[1]-c0[1])*t,c0[2]+(c1[2]-c0[2])*t].map(Math.round);}
+  }
 }
 
 let filActif=false;
