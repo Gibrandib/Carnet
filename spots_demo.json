@@ -1,0 +1,1002 @@
+[
+  {
+    "id": "spot_25_67400",
+    "lat": 46.56182,
+    "lon": 6.68409,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2022-07-03",
+    "alt": 820,
+    "mix": 34,
+    "foret": true
+  },
+  {
+    "id": "spot_82_647543",
+    "lat": 46.69784,
+    "lon": 6.77776,
+    "espece": "Lactaire sanguin",
+    "date": "2024-10-12",
+    "alt": 1041,
+    "mix": 16,
+    "foret": true
+  },
+  {
+    "id": "spot_61_147353",
+    "lat": 46.38463,
+    "lon": 7.15474,
+    "espece": "Chanterelle",
+    "date": "2022-08-08",
+    "alt": 1425,
+    "mix": 22,
+    "foret": true
+  },
+  {
+    "id": "spot_56_408392",
+    "lat": 46.58621,
+    "lon": 7.03071,
+    "espece": "Chanterelle",
+    "date": "2021-08-17",
+    "alt": 916,
+    "mix": 52,
+    "foret": true
+  },
+  {
+    "id": "spot_58_303874",
+    "lat": 46.78196,
+    "lon": 6.99241,
+    "espece": "Chanterelle",
+    "date": "2023-09-18",
+    "alt": 1453,
+    "mix": 10,
+    "foret": true
+  },
+  {
+    "id": "spot_41_342880",
+    "lat": 46.7728,
+    "lon": 7.09393,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2022-09-10",
+    "alt": 1131,
+    "mix": 65,
+    "foret": true
+  },
+  {
+    "id": "spot_46_102793",
+    "lat": 46.70729,
+    "lon": 7.18856,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2023-08-22",
+    "alt": 1211,
+    "mix": 62,
+    "foret": true
+  },
+  {
+    "id": "spot_78_963734",
+    "lat": 46.81343,
+    "lon": 6.87203,
+    "espece": "Chanterelle",
+    "date": "2023-08-06",
+    "alt": 1220,
+    "mix": 48,
+    "foret": true
+  },
+  {
+    "id": "spot_24_338085",
+    "lat": 46.60491,
+    "lon": 6.85048,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2024-07-08",
+    "alt": 1160,
+    "mix": 24,
+    "foret": true
+  },
+  {
+    "id": "spot_1_102495",
+    "lat": 46.5976,
+    "lon": 6.52001,
+    "espece": "Morille",
+    "date": "2023-03-08",
+    "alt": 542,
+    "mix": 87,
+    "foret": true
+  },
+  {
+    "id": "spot_9_729126",
+    "lat": 46.64127,
+    "lon": 7.04684,
+    "espece": "Morille",
+    "date": "2021-05-21",
+    "alt": 575,
+    "mix": 74,
+    "foret": true
+  },
+  {
+    "id": "spot_7_101001",
+    "lat": 46.19869,
+    "lon": 7.02901,
+    "espece": "Morille",
+    "date": "2023-03-28",
+    "alt": 638,
+    "mix": 95,
+    "foret": true
+  },
+  {
+    "id": "spot_80_690614",
+    "lat": 46.62414,
+    "lon": 7.26654,
+    "espece": "Lactaire sanguin",
+    "date": "2024-10-07",
+    "alt": 1055,
+    "mix": 18,
+    "foret": true
+  },
+  {
+    "id": "spot_36_265614",
+    "lat": 46.54566,
+    "lon": 6.7531,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2023-08-22",
+    "alt": 1343,
+    "mix": 35,
+    "foret": true
+  },
+  {
+    "id": "spot_5_124826",
+    "lat": 46.2177,
+    "lon": 7.178,
+    "espece": "Morille",
+    "date": "2023-03-24",
+    "alt": 870,
+    "mix": 74,
+    "foret": true
+  },
+  {
+    "id": "spot_94_184363",
+    "lat": 46.49362,
+    "lon": 7.19818,
+    "espece": "Lactaire sanguin",
+    "date": "2023-09-16",
+    "alt": 1802,
+    "mix": 10,
+    "foret": true
+  },
+  {
+    "id": "spot_45_898981",
+    "lat": 46.40845,
+    "lon": 6.94202,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2024-08-02",
+    "alt": 1331,
+    "mix": 43,
+    "foret": true
+  },
+  {
+    "id": "spot_53_385195",
+    "lat": 46.45419,
+    "lon": 7.08284,
+    "espece": "Chanterelle",
+    "date": "2023-09-20",
+    "alt": 1123,
+    "mix": 17,
+    "foret": true
+  },
+  {
+    "id": "spot_49_349658",
+    "lat": 46.64089,
+    "lon": 6.80603,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2021-10-08",
+    "alt": 1108,
+    "mix": 49,
+    "foret": true
+  },
+  {
+    "id": "spot_97_442721",
+    "lat": 46.23292,
+    "lon": 7.11155,
+    "espece": "Lactaire sanguin",
+    "date": "2022-10-13",
+    "alt": 1822,
+    "mix": 29,
+    "foret": true
+  },
+  {
+    "id": "spot_13_583532",
+    "lat": 46.32264,
+    "lon": 6.94909,
+    "espece": "Morille",
+    "date": "2023-05-19",
+    "alt": 838,
+    "mix": 97,
+    "foret": true
+  },
+  {
+    "id": "spot_79_311957",
+    "lat": 46.65285,
+    "lon": 7.12223,
+    "espece": "Lactaire sanguin",
+    "date": "2022-09-04",
+    "alt": 952,
+    "mix": 29,
+    "foret": true
+  },
+  {
+    "id": "spot_72_485641",
+    "lat": 46.77415,
+    "lon": 7.16858,
+    "espece": "Chanterelle",
+    "date": "2022-09-08",
+    "alt": 879,
+    "mix": 37,
+    "foret": true
+  },
+  {
+    "id": "spot_33_919387",
+    "lat": 46.55543,
+    "lon": 6.93376,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2023-07-02",
+    "alt": 1676,
+    "mix": 52,
+    "foret": true
+  },
+  {
+    "id": "spot_14_47116",
+    "lat": 46.4034,
+    "lon": 7.29786,
+    "espece": "Morille",
+    "date": "2022-05-16",
+    "alt": 493,
+    "mix": 88,
+    "foret": true
+  },
+  {
+    "id": "spot_93_868461",
+    "lat": 46.52389,
+    "lon": 6.71945,
+    "espece": "Lactaire sanguin",
+    "date": "2021-10-10",
+    "alt": 1158,
+    "mix": 20,
+    "foret": true
+  },
+  {
+    "id": "spot_68_150830",
+    "lat": 46.64948,
+    "lon": 6.68759,
+    "espece": "Chanterelle",
+    "date": "2023-08-18",
+    "alt": 682,
+    "mix": 18,
+    "foret": true
+  },
+  {
+    "id": "spot_4_957213",
+    "lat": 46.15455,
+    "lon": 7.14466,
+    "espece": "Morille",
+    "date": "2024-04-09",
+    "alt": 559,
+    "mix": 53,
+    "foret": true
+  },
+  {
+    "id": "spot_77_114389",
+    "lat": 46.3231,
+    "lon": 7.17138,
+    "espece": "Chanterelle",
+    "date": "2022-07-05",
+    "alt": 1084,
+    "mix": 52,
+    "foret": true
+  },
+  {
+    "id": "spot_42_634284",
+    "lat": 46.63125,
+    "lon": 7.18233,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2024-09-28",
+    "alt": 804,
+    "mix": 25,
+    "foret": true
+  },
+  {
+    "id": "spot_66_450069",
+    "lat": 46.65349,
+    "lon": 6.90382,
+    "espece": "Chanterelle",
+    "date": "2024-07-24",
+    "alt": 1482,
+    "mix": 40,
+    "foret": true
+  },
+  {
+    "id": "spot_27_658982",
+    "lat": 46.54973,
+    "lon": 6.87814,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2024-10-07",
+    "alt": 893,
+    "mix": 26,
+    "foret": true
+  },
+  {
+    "id": "spot_23_995149",
+    "lat": 46.51937,
+    "lon": 6.98528,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2022-08-23",
+    "alt": 1338,
+    "mix": 45,
+    "foret": true
+  },
+  {
+    "id": "spot_43_741230",
+    "lat": 46.73054,
+    "lon": 6.53527,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2023-08-21",
+    "alt": 1236,
+    "mix": 30,
+    "foret": true
+  },
+  {
+    "id": "spot_54_686857",
+    "lat": 46.55361,
+    "lon": 6.70378,
+    "espece": "Chanterelle",
+    "date": "2024-06-17",
+    "alt": 1547,
+    "mix": 44,
+    "foret": true
+  },
+  {
+    "id": "spot_32_968709",
+    "lat": 46.69959,
+    "lon": 6.7282,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2024-08-07",
+    "alt": 1307,
+    "mix": 33,
+    "foret": true
+  },
+  {
+    "id": "spot_71_389986",
+    "lat": 46.76646,
+    "lon": 6.96055,
+    "espece": "Chanterelle",
+    "date": "2024-06-12",
+    "alt": 905,
+    "mix": 58,
+    "foret": true
+  },
+  {
+    "id": "spot_50_328261",
+    "lat": 46.72438,
+    "lon": 7.19706,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2022-07-22",
+    "alt": 1095,
+    "mix": 45,
+    "foret": true
+  },
+  {
+    "id": "spot_96_993918",
+    "lat": 46.55391,
+    "lon": 7.04916,
+    "espece": "Lactaire sanguin",
+    "date": "2022-08-26",
+    "alt": 1522,
+    "mix": 2,
+    "foret": true
+  },
+  {
+    "id": "spot_47_881416",
+    "lat": 46.69608,
+    "lon": 7.20731,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2024-08-08",
+    "alt": 1032,
+    "mix": 31,
+    "foret": true
+  },
+  {
+    "id": "spot_84_435574",
+    "lat": 46.2733,
+    "lon": 6.9174,
+    "espece": "Lactaire sanguin",
+    "date": "2023-10-26",
+    "alt": 1890,
+    "mix": 14,
+    "foret": true
+  },
+  {
+    "id": "spot_92_227483",
+    "lat": 46.83362,
+    "lon": 6.91971,
+    "espece": "Lactaire sanguin",
+    "date": "2023-08-27",
+    "alt": 1297,
+    "mix": 9,
+    "foret": true
+  },
+  {
+    "id": "spot_31_926518",
+    "lat": 46.75526,
+    "lon": 7.22195,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2022-10-01",
+    "alt": 1499,
+    "mix": 36,
+    "foret": true
+  },
+  {
+    "id": "spot_12_264880",
+    "lat": 46.76346,
+    "lon": 6.75174,
+    "espece": "Morille",
+    "date": "2024-04-21",
+    "alt": 869,
+    "mix": 49,
+    "foret": true
+  },
+  {
+    "id": "spot_62_575670",
+    "lat": 46.18235,
+    "lon": 7.28715,
+    "espece": "Chanterelle",
+    "date": "2021-09-14",
+    "alt": 1507,
+    "mix": 50,
+    "foret": true
+  },
+  {
+    "id": "spot_51_679518",
+    "lat": 46.75505,
+    "lon": 7.27351,
+    "espece": "Chanterelle",
+    "date": "2023-08-21",
+    "alt": 1121,
+    "mix": 35,
+    "foret": true
+  },
+  {
+    "id": "spot_18_912627",
+    "lat": 46.81767,
+    "lon": 7.20068,
+    "espece": "Morille",
+    "date": "2023-05-25",
+    "alt": 582,
+    "mix": 72,
+    "foret": true
+  },
+  {
+    "id": "spot_69_542611",
+    "lat": 46.41812,
+    "lon": 6.62224,
+    "espece": "Chanterelle",
+    "date": "2022-06-14",
+    "alt": 1017,
+    "mix": 31,
+    "foret": true
+  },
+  {
+    "id": "spot_87_191056",
+    "lat": 46.34576,
+    "lon": 6.97692,
+    "espece": "Lactaire sanguin",
+    "date": "2023-10-01",
+    "alt": 1958,
+    "mix": 30,
+    "foret": true
+  },
+  {
+    "id": "spot_38_933259",
+    "lat": 46.84892,
+    "lon": 7.29688,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2021-08-17",
+    "alt": 1243,
+    "mix": 28,
+    "foret": true
+  },
+  {
+    "id": "spot_74_866851",
+    "lat": 46.52389,
+    "lon": 7.22554,
+    "espece": "Chanterelle",
+    "date": "2021-06-21",
+    "alt": 1038,
+    "mix": 18,
+    "foret": true
+  },
+  {
+    "id": "spot_44_36028",
+    "lat": 46.53618,
+    "lon": 6.84215,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2021-07-03",
+    "alt": 1005,
+    "mix": 54,
+    "foret": true
+  },
+  {
+    "id": "spot_86_487549",
+    "lat": 46.54889,
+    "lon": 7.03455,
+    "espece": "Lactaire sanguin",
+    "date": "2023-08-16",
+    "alt": 1565,
+    "mix": 5,
+    "foret": true
+  },
+  {
+    "id": "spot_6_192288",
+    "lat": 46.79561,
+    "lon": 6.56304,
+    "espece": "Morille",
+    "date": "2023-05-20",
+    "alt": 770,
+    "mix": 76,
+    "foret": true
+  },
+  {
+    "id": "spot_2_232660",
+    "lat": 46.66847,
+    "lon": 6.93629,
+    "espece": "Morille",
+    "date": "2024-03-01",
+    "alt": 495,
+    "mix": 53,
+    "foret": true
+  },
+  {
+    "id": "spot_17_453723",
+    "lat": 46.67561,
+    "lon": 7.11488,
+    "espece": "Morille",
+    "date": "2023-03-10",
+    "alt": 845,
+    "mix": 50,
+    "foret": true
+  },
+  {
+    "id": "spot_63_5544",
+    "lat": 46.65284,
+    "lon": 6.80718,
+    "espece": "Chanterelle",
+    "date": "2024-07-05",
+    "alt": 1271,
+    "mix": 54,
+    "foret": true
+  },
+  {
+    "id": "spot_21_731907",
+    "lat": 46.73217,
+    "lon": 6.74601,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2021-08-19",
+    "alt": 861,
+    "mix": 25,
+    "foret": true
+  },
+  {
+    "id": "spot_48_159197",
+    "lat": 46.16735,
+    "lon": 7.08925,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2023-10-26",
+    "alt": 1208,
+    "mix": 37,
+    "foret": true
+  },
+  {
+    "id": "spot_28_248656",
+    "lat": 46.75469,
+    "lon": 6.54334,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2021-07-13",
+    "alt": 1394,
+    "mix": 26,
+    "foret": true
+  },
+  {
+    "id": "spot_67_439872",
+    "lat": 46.67624,
+    "lon": 7.17189,
+    "espece": "Chanterelle",
+    "date": "2023-09-21",
+    "alt": 844,
+    "mix": 27,
+    "foret": true
+  },
+  {
+    "id": "spot_3_809430",
+    "lat": 46.57141,
+    "lon": 6.949,
+    "espece": "Morille",
+    "date": "2024-03-15",
+    "alt": 1003,
+    "mix": 57,
+    "foret": true
+  },
+  {
+    "id": "spot_89_425503",
+    "lat": 46.63425,
+    "lon": 6.74496,
+    "espece": "Lactaire sanguin",
+    "date": "2023-09-18",
+    "alt": 1987,
+    "mix": 11,
+    "foret": true
+  },
+  {
+    "id": "spot_11_942909",
+    "lat": 46.72526,
+    "lon": 7.14404,
+    "espece": "Morille",
+    "date": "2024-04-03",
+    "alt": 616,
+    "mix": 98,
+    "foret": true
+  },
+  {
+    "id": "spot_75_470306",
+    "lat": 46.38625,
+    "lon": 7.20371,
+    "espece": "Chanterelle",
+    "date": "2023-09-09",
+    "alt": 1454,
+    "mix": 15,
+    "foret": true
+  },
+  {
+    "id": "spot_64_517957",
+    "lat": 46.67568,
+    "lon": 7.11604,
+    "espece": "Chanterelle",
+    "date": "2021-09-08",
+    "alt": 780,
+    "mix": 54,
+    "foret": true
+  },
+  {
+    "id": "spot_65_612652",
+    "lat": 46.74384,
+    "lon": 6.86517,
+    "espece": "Chanterelle",
+    "date": "2024-08-25",
+    "alt": 1512,
+    "mix": 38,
+    "foret": true
+  },
+  {
+    "id": "spot_99_239865",
+    "lat": 46.21946,
+    "lon": 7.11019,
+    "espece": "Lactaire sanguin",
+    "date": "2022-09-22",
+    "alt": 1066,
+    "mix": 5,
+    "foret": true
+  },
+  {
+    "id": "spot_52_962534",
+    "lat": 46.74056,
+    "lon": 6.76492,
+    "espece": "Chanterelle",
+    "date": "2021-06-09",
+    "alt": 782,
+    "mix": 47,
+    "foret": true
+  },
+  {
+    "id": "spot_39_703539",
+    "lat": 46.7666,
+    "lon": 7.20342,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2023-09-06",
+    "alt": 1597,
+    "mix": 54,
+    "foret": true
+  },
+  {
+    "id": "spot_60_632940",
+    "lat": 46.48123,
+    "lon": 7.22094,
+    "espece": "Chanterelle",
+    "date": "2022-06-10",
+    "alt": 1127,
+    "mix": 52,
+    "foret": true
+  },
+  {
+    "id": "spot_16_884788",
+    "lat": 46.47763,
+    "lon": 6.70113,
+    "espece": "Morille",
+    "date": "2021-05-24",
+    "alt": 517,
+    "mix": 83,
+    "foret": true
+  },
+  {
+    "id": "spot_57_677317",
+    "lat": 46.43168,
+    "lon": 6.73652,
+    "espece": "Chanterelle",
+    "date": "2022-07-14",
+    "alt": 1280,
+    "mix": 34,
+    "foret": true
+  },
+  {
+    "id": "spot_98_960108",
+    "lat": 46.75212,
+    "lon": 7.29203,
+    "espece": "Lactaire sanguin",
+    "date": "2023-10-20",
+    "alt": 1023,
+    "mix": 19,
+    "foret": true
+  },
+  {
+    "id": "spot_73_980721",
+    "lat": 46.4222,
+    "lon": 7.0351,
+    "espece": "Chanterelle",
+    "date": "2024-07-27",
+    "alt": 1078,
+    "mix": 18,
+    "foret": true
+  },
+  {
+    "id": "spot_40_264465",
+    "lat": 46.57817,
+    "lon": 7.28979,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2021-09-22",
+    "alt": 912,
+    "mix": 28,
+    "foret": true
+  },
+  {
+    "id": "spot_22_165126",
+    "lat": 46.72122,
+    "lon": 7.28239,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2022-08-22",
+    "alt": 1673,
+    "mix": 55,
+    "foret": true
+  },
+  {
+    "id": "spot_8_670175",
+    "lat": 46.34458,
+    "lon": 7.00855,
+    "espece": "Morille",
+    "date": "2023-03-12",
+    "alt": 763,
+    "mix": 53,
+    "foret": true
+  },
+  {
+    "id": "spot_95_491746",
+    "lat": 46.18596,
+    "lon": 7.25285,
+    "espece": "Lactaire sanguin",
+    "date": "2024-08-27",
+    "alt": 1033,
+    "mix": 12,
+    "foret": true
+  },
+  {
+    "id": "spot_19_953499",
+    "lat": 46.75936,
+    "lon": 6.73876,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2022-08-12",
+    "alt": 1030,
+    "mix": 54,
+    "foret": true
+  },
+  {
+    "id": "spot_35_657373",
+    "lat": 46.43264,
+    "lon": 7.25328,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2022-07-20",
+    "alt": 867,
+    "mix": 46,
+    "foret": true
+  },
+  {
+    "id": "spot_20_878721",
+    "lat": 46.7957,
+    "lon": 7.23479,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2023-10-01",
+    "alt": 929,
+    "mix": 43,
+    "foret": true
+  },
+  {
+    "id": "spot_83_152991",
+    "lat": 46.49314,
+    "lon": 6.84682,
+    "espece": "Lactaire sanguin",
+    "date": "2023-10-27",
+    "alt": 1841,
+    "mix": 22,
+    "foret": true
+  },
+  {
+    "id": "spot_29_652144",
+    "lat": 46.44532,
+    "lon": 6.72284,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2022-07-15",
+    "alt": 900,
+    "mix": 23,
+    "foret": true
+  },
+  {
+    "id": "spot_70_19531",
+    "lat": 46.44104,
+    "lon": 6.66547,
+    "espece": "Chanterelle",
+    "date": "2024-09-25",
+    "alt": 1198,
+    "mix": 54,
+    "foret": true
+  },
+  {
+    "id": "spot_15_595888",
+    "lat": 46.22675,
+    "lon": 7.00196,
+    "espece": "Morille",
+    "date": "2024-05-03",
+    "alt": 794,
+    "mix": 64,
+    "foret": true
+  },
+  {
+    "id": "spot_55_920770",
+    "lat": 46.80818,
+    "lon": 7.08963,
+    "espece": "Chanterelle",
+    "date": "2022-08-14",
+    "alt": 671,
+    "mix": 52,
+    "foret": true
+  },
+  {
+    "id": "spot_26_935514",
+    "lat": 46.50991,
+    "lon": 6.72278,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2024-08-18",
+    "alt": 970,
+    "mix": 66,
+    "foret": true
+  },
+  {
+    "id": "spot_85_750476",
+    "lat": 46.66172,
+    "lon": 6.71472,
+    "espece": "Lactaire sanguin",
+    "date": "2022-08-09",
+    "alt": 1823,
+    "mix": 7,
+    "foret": true
+  },
+  {
+    "id": "spot_76_957285",
+    "lat": 46.67432,
+    "lon": 6.54167,
+    "espece": "Chanterelle",
+    "date": "2023-07-21",
+    "alt": 670,
+    "mix": 59,
+    "foret": true
+  },
+  {
+    "id": "spot_81_983844",
+    "lat": 46.58907,
+    "lon": 6.58152,
+    "espece": "Lactaire sanguin",
+    "date": "2023-10-20",
+    "alt": 1147,
+    "mix": 25,
+    "foret": true
+  },
+  {
+    "id": "spot_34_861819",
+    "lat": 46.52179,
+    "lon": 6.5455,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2021-08-03",
+    "alt": 839,
+    "mix": 63,
+    "foret": true
+  },
+  {
+    "id": "spot_30_481358",
+    "lat": 46.52841,
+    "lon": 6.51181,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2021-08-06",
+    "alt": 1532,
+    "mix": 51,
+    "foret": true
+  },
+  {
+    "id": "spot_88_792932",
+    "lat": 46.53862,
+    "lon": 6.69226,
+    "espece": "Lactaire sanguin",
+    "date": "2024-10-23",
+    "alt": 1905,
+    "mix": 14,
+    "foret": true
+  },
+  {
+    "id": "spot_10_55937",
+    "lat": 46.84267,
+    "lon": 7.012,
+    "espece": "Morille",
+    "date": "2022-05-11",
+    "alt": 1186,
+    "mix": 89,
+    "foret": true
+  },
+  {
+    "id": "spot_59_213701",
+    "lat": 46.29713,
+    "lon": 7.12861,
+    "espece": "Chanterelle",
+    "date": "2023-09-15",
+    "alt": 1052,
+    "mix": 53,
+    "foret": true
+  },
+  {
+    "id": "spot_90_120655",
+    "lat": 46.67215,
+    "lon": 6.76463,
+    "espece": "Lactaire sanguin",
+    "date": "2024-09-10",
+    "alt": 1414,
+    "mix": 7,
+    "foret": true
+  },
+  {
+    "id": "spot_100_32639",
+    "lat": 46.53639,
+    "lon": 6.62523,
+    "espece": "Lactaire sanguin",
+    "date": "2024-09-23",
+    "alt": 1862,
+    "mix": 9,
+    "foret": true
+  },
+  {
+    "id": "spot_91_724585",
+    "lat": 46.5251,
+    "lon": 7.10975,
+    "espece": "Lactaire sanguin",
+    "date": "2022-08-07",
+    "alt": 1891,
+    "mix": 8,
+    "foret": true
+  },
+  {
+    "id": "spot_37_458285",
+    "lat": 46.24161,
+    "lon": 7.0164,
+    "espece": "Cèpe de Bordeaux",
+    "date": "2024-09-25",
+    "alt": 848,
+    "mix": 20,
+    "foret": true
+  }
+]
